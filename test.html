@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+<body>
+    <div id="app" style="margin-left: 10px;">
+        <div class="alert alert-info text-center">Hello {{fullname}}</div>
+        <div>First Name: {{first}}</div>
+        <div>Last Name: {{last}}<span></span></div><br><br>
+        <div class="form-group">
+            <label for="fullname">Full Name</label>
+            <input type="text" placeholder="Full Name" class="form-control" v-model="fullname">
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <label for="fullname">First Name</label>
+                    <input type="text" placeholder="First Name" class="form-control" v-model="first">
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="form-group">
+                    <label for="fullname">Last Name</label>
+                    <input type="text" placeholder="Last Name" class="form-control" v-model="last">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                first: '',
+                last: '',
+            },
+            computed: {
+                fullname: {
+                    get(){
+                        return this.first + ' ' + this.last;
+                    },
+                    set(value) {
+                        var fullname = value.split(' ');
+                        this.first = (fullname[0] !== undefined) ? fullname[0] : '';
+                        this.last = (fullname[1] !== undefined) ? fullname[1] : '';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

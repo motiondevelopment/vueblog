@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vue Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+</head>
+<body>
+    <div id="app" style="margin-left: 10px;">
+        <br><br>
+        <div class="row">
+            <div class="col-lg-5">
+               <div class="row" style="margin-left: 10px;">
+                    <div class="form-group">
+                        <label for="fullname">Starting Zip</label>
+                        <input type="text" placeholder="Starting Zip" class="form-control" v-model="startZip" maxlength="5">
+                    </div>
+               </div>
+                <span style="margin-left: 10px;">{{startResult}}</span>
+            </div>
+            <div class="col-lg-5">
+                <div class="row" style="margin-left: 10px;">
+                    <div class="form-group">
+                        <label for="fullname">Ending Zip</label>
+                        <input type="text" placeholder="Ending Zip" class="form-control" v-model="endZip" maxlength="5">
+                    </div>
+                </div>
+                <span style="margin-left: 10px;">{{endResult}}</span>
+            </div>
+        </div>
+    </div>
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                startZip: '',
+                endZip: '',
+                startResult: '',
+                endResult: '',
+            },
+            watch: {
+                startZip(){
+                    this.startResult = '';
+                    if(this.startZip.length == 5){
+                        this.lookUpStartZipCode(this.startZip);
+                    }
+                },
+                endZip(){
+                    this.endResult = '';
+                    if(this.endZip.length == 5){
+                        this.lookUpEndZipCode(this.endZip);
+                    }
+                }
+            },
+
+            methods: {
+                lookUpStartZipCode: _.debounce(function(zipcode) {
+                    var zip = this;
+                    zip.startResult = 'Searching...';
+                    axios.get('http://ziptasticapi.com/' + zipcode)
+                    .then(function(response){
+                        zip.startResult = response.data.city + ', ' + response.data.state;
+                    })
+                    .catch(function(error){
+                        zip.startResult = 'Invalid ZipCode';
+                    });
+                }, 500),
+
+                lookUpEndZipCode: _.debounce(function (zipcode) {
+                    var zip = this;
+                    zip.endResult = 'Searching...';
+                    axios.get('http://ziptasticapi.com/' + zipcode)
+                        .then(function (response) {
+                            zip.endResult = response.data.city + ', ' + response.data.state;
+                        })
+                        .catch(function (error) {
+                            zip.endResult = 'Invalid ZipCode';
+                        });
+                }, 500),
+            }
+        });
+    </script>
+</body>
+</html>
